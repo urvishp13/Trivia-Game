@@ -1,5 +1,5 @@
 // Add a 120s timer
- 
+
 // Create a questions, question's answer choices, question's answer storage
 var storage = [
     {
@@ -72,14 +72,13 @@ storage.forEach(questionSet => {
     questionsSection.appendChild(oneQuestion);
 });
 
-console.log($('.question-answer-choices'));
+//console.log($('.question-answer-choices'));
 
 function results() {
     
     writeResults();
     
     function getSubmittedAnswers() {
-        console.log(($('.question-answer-choices')));
         let answersSubmitted = [];
         let answerChoicesSets = Object.values($('.question-answer-choices'));
         console.log(answerChoicesSets);
@@ -88,8 +87,8 @@ function results() {
             
             // If went through all the answer choice sets
             if (answerChoicesSet == storage.length) {
-                console.log("break");
-                break;        
+                //console.log(answersSubmitted);
+                 return answersSubmitted;
             }
             
             // If question unanswered
@@ -103,8 +102,6 @@ function results() {
             }
         }
     
-        //console.log(answersSubmitted);
-        return answersSubmitted;
     }
     
     // generator function
@@ -116,16 +113,13 @@ function results() {
         var userUnanswered = 0;
         for (let i = 0; i < storage.length; i++) {
             if (userSubmittedAnswers[i] == null) { // if this question is unanswered
-                console.log("unanswered");
                 userUnanswered++;
             }
             else {
                 if (userSubmittedAnswers[i] == correctAnswers[i]) { // if this answer is correct
-                    console.log("right");
                     userCorrect++;
                 }
                 else {
-                    console.log("wrong");
                     userWrong++;
                 }
             }
@@ -144,7 +138,7 @@ function results() {
         var userWrong = iterator.next().value;
         var userUnanswered = iterator.next().value;
     
-        document.getElementById("display").innerHTML += `
+        document.getElementById("display").innerHTML = `
             <p>Correct:     ${userCorrect}</p>
             <p>Wrong:       ${userWrong}</p>
             <p>Unasnwered:  ${userUnanswered}</p>
@@ -155,6 +149,6 @@ function results() {
 
 // When Trivia submitted or timer runs out
 $('#submit').on('click', () => {
-    document.getElementById("display").innerHTML = "All Done!";
     results();
+    document.getElementById("display").innerHTML = "<h1>All Done!</h1>" + document.getElementById("display").innerHTML;
 });
