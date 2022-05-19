@@ -1,5 +1,5 @@
 // Add a 120s timer
-
+ 
 // Create a questions, question's answer choices, question's answer storage
 var storage = [
     {
