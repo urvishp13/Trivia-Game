@@ -72,32 +72,89 @@ storage.forEach(questionSet => {
     questionsSection.appendChild(oneQuestion);
 });
 
-function results() {
-    // Figure out which questions are right, wrong, and unanswered and overall score, and write them to DOM
-    //console.log(Object.values($('.question-answer-choices')));
-    let answersSubmitted = [];
-    let answerChoicesSets = Object.values($('.question-answer-choices'));
-    for (let i = 0; i < answerChoicesSets.length; i++) {
-        var answerChoicesSet = answerChoicesSets[i];
-        
-        // If went through all the answer choice sets
-        if (answerChoicesSet == storage.length) {
-            break;
-        }
-        
-        // If question unanswered
-        if ($(answerChoicesSet).find('input[type="radio"]:checked').length != 1) {
-            answersSubmitted.push(null);
-        }
-        else {
-            answersSubmitted.push($(answerChoicesSet).find('input[type="radio"]:checked').val());
-        }
-    }
+console.log($('.question-answer-choices'));
 
-    return answersSubmitted;
+function results() {
+    
+    writeResults();
+    
+    function getSubmittedAnswers() {
+        console.log(($('.question-answer-choices')));
+        let answersSubmitted = [];
+        let answerChoicesSets = Object.values($('.question-answer-choices'));
+        console.log(answerChoicesSets);
+        for (let i = 0; i < answerChoicesSets.length; i++) {
+            var answerChoicesSet = answerChoicesSets[i];
+            
+            // If went through all the answer choice sets
+            if (answerChoicesSet == storage.length) {
+                console.log("break");
+                break;        
+            }
+            
+            // If question unanswered
+            if ($(answerChoicesSet).find('input[type="radio"]:checked').length != 1) {
+                answersSubmitted.push(null);
+            }
+            else {
+                cnnsole.log($(answerChoicesSet).find('input[type="radio"]:checked').val());
+                console.log("string");
+                answersSubmitted.push($(answerChoicesSet).find('input[type="radio"]:checked').val());
+            }
+        }
+    
+        //console.log(answersSubmitted);
+        return answersSubmitted;
+    }
+    
+    // generator function
+    function* getResults(userSubmittedAnswers) {
+        // Figure out which questions are right, wrong, and unanswered and overall score, and write them to DOM
+        var correctAnswers = storage.map(questionSet => questionSet.answer);
+        var userCorrect = 0;
+        var userWrong = 0;
+        var userUnanswered = 0;
+        for (let i = 0; i < storage.length; i++) {
+            if (userSubmittedAnswers[i] == null) { // if this question is unanswered
+                console.log("unanswered");
+                userUnanswered++;
+            }
+            else {
+                if (userSubmittedAnswers[i] == correctAnswers[i]) { // if this answer is correct
+                    console.log("right");
+                    userCorrect++;
+                }
+                else {
+                    console.log("wrong");
+                    userWrong++;
+                }
+            }
+        }
+    
+        yield userCorrect;
+        yield userWrong;
+        return userUnanswered;
+    }
+    
+    // Write results to DOM
+    function writeResults() {
+        var userSubmittedAnswers = getSubmittedAnswers();
+        const iterator = getResults(userSubmittedAnswers);
+        var userCorrect = iterator.next().value;
+        var userWrong = iterator.next().value;
+        var userUnanswered = iterator.next().value;
+    
+        document.getElementById("display").innerHTML += `
+            <p>Correct:     ${userCorrect}</p>
+            <p>Wrong:       ${userWrong}</p>
+            <p>Unasnwered:  ${userUnanswered}</p>
+        `;
+    }
+    
 }
 
 // When Trivia submitted or timer runs out
 $('#submit').on('click', () => {
-    let answersSubmitted = results();
+    document.getElementById("display").innerHTML = "All Done!";
+    results();
 });
