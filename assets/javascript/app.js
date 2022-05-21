@@ -1,5 +1,3 @@
-// Add a 120s timer
-
 // Create a questions, question's answer choices, question's answer storage
 var storage = [
     {
@@ -96,8 +94,6 @@ function results() {
                 answersSubmitted.push(null);
             }
             else {
-                cnnsole.log($(answerChoicesSet).find('input[type="radio"]:checked').val());
-                console.log("string");
                 answersSubmitted.push($(answerChoicesSet).find('input[type="radio"]:checked').val());
             }
         }
@@ -147,8 +143,39 @@ function results() {
     
 }
 
+var display = document.getElementById("display");
+
+// Add a 120s timer
+window.onload = function () {
+    var currentTime = 2 * 60;
+    startTimer(currentTime);
+};
+
+function startTimer(currentTime) { // currentTime is in s
+    
+    currentTime--; // reduce the time by 1s to account for the 1s delay from written "2:00min" to 1:59min
+
+    setInterval(function () {
+        var min = parseInt(currentTime / 60);
+        var sec = parseInt(currentTime % 60);
+
+        sec = sec < 10 ? "0" + sec : sec;
+        document.getElementById('timer').textContent = min + ":" + sec;
+
+        // If time runs out
+        if (--currentTime == 0) {
+            // Show results
+            results();
+            display.innerHTML = "<h1>Times Up</h1>" + display.innerHTML;
+        }
+
+    }, 1000);
+    
+}
+
+
 // When Trivia submitted or timer runs out
 $('#submit').on('click', () => {
     results();
-    document.getElementById("display").innerHTML = "<h1>All Done!</h1>" + document.getElementById("display").innerHTML;
+    display.innerHTML = "<h1>All Done!</h1>" + display.innerHTML;
 });
