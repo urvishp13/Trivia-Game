@@ -1,7 +1,12 @@
+// Add a 120s timer
+window.onload = function () {
+    var currentTime = 2 * 60;
+    startTimer(currentTime);
+};
+
 // Create a questions, question's answer choices, question's answer storage
 var storage = [
     {
-        questionNumber: "question1",
         question: "What is the 2nd planet from the Sun?",
         answerChoices: [
             "Mars", "Venus", "Earth", "Mercury"
@@ -9,7 +14,6 @@ var storage = [
         answer: "Venus"
     },
     {
-        questionNumber: "question2",
         question: "What is the 4th planet from the Sun?",
         answerChoices: [
             "Mars", "Venus", "Earth", "Mercury"
@@ -18,16 +22,19 @@ var storage = [
     }
 ];
 
-console.log("after event: " + (new Date).getTime());
+//console.log("after event: " + (new Date).getTime());
 //console.log(storage);
 
 function writeQuestions(storage) {
 
     // Grab the  location in the DOM to write this questionSet's content to
-    var $questionsSection = $("body#questions-page #questions-section");
+    var $questionsSection = $("body #questions-section");
 
+    var questionNumber = 0;
     // write questions and question answer choices to DOM
     storage.forEach(questionSet => {
+        questionNumber++;
+
         let $oneQuestion = $("<div>");
 
         // Question
@@ -46,13 +53,13 @@ function writeQuestions(storage) {
             // Create radio nutton for answer choice
             let $oneAnswerChoiceRadio = $("<input>")
                 .attr("type", "radio")
-                .attr("id", `${questionSet.questionNumber}.${answerChoice}`)
+                .attr("id", `question:${questionNumber} - ${answerChoice}`)
                 .attr("name", `${questionSet.question}`)
                 .attr("value", `${answerChoice}`);
 
             // Add text to this radio button
             let $oneAnswerChoiceLabel = $("<label>")
-                .attr("for", `${questionSet.questionNumber}.${answerChoice}`)
+                .attr("for", `question:${questionNumber} - ${answerChoice}`)
                 .text(`${answerChoice}`);
             
             // Append this answer choice's content
@@ -90,19 +97,21 @@ function writeQuestions(storage) {
 
 function results() {
     
+    
     writeResults();
     
     function getSubmittedAnswers() {
+        console.log("got answer choices");
         let answersSubmitted = [];
-        let answerChoicesSets = Object.values($('body#questions-page .question-answer-choices'));
-        //console.log(answerChoicesSets);
+        let answerChoicesSets = Object.values($('.question-answer-choices'));
+        console.log(answerChoicesSets);
         for (let i = 0; i < answerChoicesSets.length; i++) {
             var answerChoicesSet = answerChoicesSets[i];
             
             // If went through all the answer choice sets
             if (answerChoicesSet == storage.length) {
                 //console.log(answersSubmitted);
-                 return answersSubmitted;
+                return answersSubmitted;
             }
             
             // If question unanswered
@@ -150,7 +159,8 @@ function results() {
         var userWrong = iterator.next().value;
         var userUnanswered = iterator.next().value;
     
-        results.text(`
+        display.html(`
+            <h1 id="status">All Done!</h1>
             <p>Correct:     ${userCorrect}</p>
             <p>Wrong:       ${userWrong}</p>
             <p>Unasnwered:  ${userUnanswered}</p>
@@ -158,15 +168,6 @@ function results() {
     }
     
 }
-
-var status = $("body#results-page #status");
-var results = $("body#results-page #results");
-
-// Add a 120s timer
-window.onload = function () {
-    var currentTime = 2 * 60;
-    startTimer(currentTime);
-};
 
 function startTimer(currentTime) { // currentTime is in s
     
@@ -190,16 +191,31 @@ function startTimer(currentTime) { // currentTime is in s
     
 }
 
+var display = $('body #display');
+
 // When Trivia started
-$('#start').on('click', () => {
-    location.href = "questions.html";
-    //console.log("before qeuestions: " + (new Date).getTime());
-    writeQuestions(storage);
-    /console.log("after questions: " + (new Date).getTime());
+$('#start').on('click', function () {
+    // Set the HTML for the new content
+    display.html(`
+        <h1 id="heading">Trivia Game</h1>
+        <p id="timer">2:00</p>
+        <div id="questions-section"></div>
+        <button id="submit">Done</button>
+    `);
+
+    // Write the questions to the page
+    $.ajax({
+        url: "index.html"
+    }).then(function() {
+        writeQuestions(storage);
+    });
 });
 
-
-// When Trivia submitted
-$('#submit').on('click', () => {
-    location.href = "results.html";
+$('#submit').on('click', function() {
+    // Display results
+    $.ajax({
+        url: "index.html"
+    }).then(function() {
+        results();
+    });
 });
