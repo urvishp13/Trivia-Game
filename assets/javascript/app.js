@@ -1,6 +1,6 @@
 // Add a 120s timer
 window.onload = function () {
-    var currentTime = 2 * 60;
+    var currentTime = 10;
     startTimer(currentTime);
 };
 
@@ -28,7 +28,7 @@ var storage = [
 function writeQuestions(storage) {
 
     // Grab the  location in the DOM to write this questionSet's content to
-    var $questionsSection = $("body #questions-section");
+    var $questionsSection = $("body #display #questions-section");
 
     var questionNumber = 0;
     // write questions and question answer choices to DOM
@@ -97,7 +97,6 @@ function writeQuestions(storage) {
 
 function results() {
     
-    
     writeResults();
     
     function getSubmittedAnswers() {
@@ -160,7 +159,6 @@ function results() {
         var userUnanswered = iterator.next().value;
     
         display.html(`
-            <h1 id="status">All Done!</h1>
             <p>Correct:     ${userCorrect}</p>
             <p>Wrong:       ${userWrong}</p>
             <p>Unasnwered:  ${userUnanswered}</p>
@@ -184,7 +182,7 @@ function startTimer(currentTime) { // currentTime is in s
         if (--currentTime == 0) {
             // Show results
             results();
-            display.innerHTML = "<h1>Times Up</h1>" + display.innerHTML;
+            display.prepend('<h1 id="status">Times Up</h1>');
         }
 
     }, 1000);
@@ -194,7 +192,7 @@ function startTimer(currentTime) { // currentTime is in s
 var display = $('body #display');
 
 // When Trivia started
-$('#start').on('click', function () {
+$(display).on('click', '#start', function () {
     // Set the HTML for the new content
     display.html(`
         <h1 id="heading">Trivia Game</h1>
@@ -211,11 +209,13 @@ $('#start').on('click', function () {
     });
 });
 
-$('#submit').on('click', function() {
+$(display).on('click', '#submit', function() {
+    //console.log("event working");
     // Display results
     $.ajax({
         url: "index.html"
     }).then(function() {
         results();
+        display.prepend('<h1 id="status">All Done!</h1>');
     });
 });
