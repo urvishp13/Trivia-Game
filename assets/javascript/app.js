@@ -167,11 +167,13 @@ function results() {
     
 }
 
+var intervalID; // used to stop the timer
+
 function startTimer(currentTime) { // currentTime is in s
     
     currentTime--; // reduce the time by 1s to account for the 1s delay from written "2:00min" to 1:59min
 
-    setInterval(function () {
+    intervalID = setInterval(function () {
         var min = parseInt(currentTime / 60);
         var sec = parseInt(currentTime % 60);
 
@@ -209,12 +211,14 @@ $(display).on('click', '#start', function () {
     });
 });
 
+// Need to use event delegation since #submit is added dynamically
 $(display).on('click', '#submit', function() {
     //console.log("event working");
     // Display results
     $.ajax({
         url: "index.html"
     }).then(function() {
+        clearInterval(intervalID); // stop the timer
         results();
         display.prepend('<h1 id="status">All Done!</h1>');
     });
