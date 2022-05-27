@@ -1,6 +1,6 @@
 // Add a 120s timer
 window.onload = function () {
-    var currentTime = 10;
+    var currentTime = 2 * 60;
     startTimer(currentTime);
 };
 
@@ -19,6 +19,13 @@ var storage = [
             "Mars", "Venus", "Earth", "Mercury"
         ],
         answer: "Mars"
+    },
+    {
+        question: "What is the 3rd planet from the Sun?",
+        answerChoices: [
+            "Mars", "Venus", "Earth", "Mercury"
+        ],
+        answer: "Earth"
     }
 ];
 
@@ -170,8 +177,6 @@ function results() {
 var intervalID; // used to stop the timer
 
 function startTimer(currentTime) { // currentTime is in s
-    
-    currentTime--; // reduce the time by 1s to account for the 1s delay from written "2:00min" to 1:59min
 
     intervalID = setInterval(function () {
         var min = parseInt(currentTime / 60);
