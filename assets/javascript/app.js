@@ -1,9 +1,3 @@
-// Add a 120s timer
-window.onload = function () {
-    var currentTime = 2 * 60;
-    startTimer(currentTime);
-};
-
 // Create a questions, question's answer choices, question's answer storage
 var storage = [
     {
@@ -178,6 +172,8 @@ var intervalID; // used to stop the timer
 
 function startTimer(currentTime) { // currentTime is in s
 
+    currentTime--;
+
     intervalID = setInterval(function () {
         var min = parseInt(currentTime / 60);
         var sec = parseInt(currentTime % 60);
@@ -186,10 +182,13 @@ function startTimer(currentTime) { // currentTime is in s
         $('#timer').text(min + ":" + sec);
 
         // If time runs out
-        if (--currentTime == 0) {
+        if (currentTime-- == 0) {
             // Show results
             results();
-            display.prepend('<h1 id="status">Times Up</h1>');
+            display.prepend(`
+                <h1 id="heading">Trivia Game</h1>
+                <h2 id="status">Times Up</h1>
+            `);
         }
 
     }, 1000);
@@ -212,6 +211,9 @@ $(display).on('click', '#start', function () {
     $.ajax({
         url: "index.html"
     }).then(function() {
+        // Add a 120s timer
+        startTimer(10);
+        // Write questions to page
         writeQuestions(storage);
     });
 });
@@ -225,6 +227,9 @@ $(display).on('click', '#submit', function() {
     }).then(function() {
         clearInterval(intervalID); // stop the timer
         results();
-        display.prepend('<h1 id="status">All Done!</h1>');
+        display.prepend(`
+            <h1 id="heading">Trivia Game</h1>
+            <h2 id="status">All Done!</h1>
+        `);
     });
 });
