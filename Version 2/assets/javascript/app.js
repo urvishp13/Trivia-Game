@@ -26,65 +26,63 @@ var storage = [
 //console.log("after event: " + (new Date).getTime());
 //console.log(storage);
 
-function writeQuestions(storage) {
+var question = 0;
+
+function writeQuestion(question) {
 
     // Grab the  location in the DOM to write this questionSet's content to
-    var $questionsSection = $("body #display #questions-section");
+    var $questionsSection = $("body #display #question-section");
 
-    var questionNumber = 0;
     // write questions and question answer choices to DOM
-    storage.forEach(questionSet => {
-        questionNumber++;
+    
+    let $oneQuestion = $("<div>");
 
-        let $oneQuestion = $("<div>");
+    // Question
+    let $question = $("<p>")
+        .attr("class", "question")
+        .text(`${question.question}`);
 
-        // Question
-        let $question = $("<p>")
-            .attr("class", "question")
-            .text(`${questionSet.question}`);
+    // Answer choices for this question
+    let $answerChoices = $("<div>")
+        .attr("class", "question-answer-choices");
 
-        // Answer choices for this question
-        let $answerChoices = $("<div>")
-            .attr("class", "question-answer-choices");
+    questio.answerChoices.forEach(answerChoice => {
+        // Section for one answer choice
+        let $oneAnswerChoice = $("<div>");
 
-        questionSet.answerChoices.forEach(answerChoice => {
-            // Section for one answer choice
-            let $oneAnswerChoice = $("<div>");
+        // Create radio nutton for answer choice
+        let $oneAnswerChoiceRadio = $("<input>")
+            .attr("type", "radio")
+            .attr("id", `${answerChoice}`)
+            .attr("name", `${question.question}`)
+            .attr("value", `${answerChoice}`);
 
-            // Create radio nutton for answer choice
-            let $oneAnswerChoiceRadio = $("<input>")
-                .attr("type", "radio")
-                .attr("id", `question:${questionNumber} - ${answerChoice}`)
-                .attr("name", `${questionSet.question}`)
-                .attr("value", `${answerChoice}`);
-
-            // Add text to this radio button
-            let $oneAnswerChoiceLabel = $("<label>")
-                .attr("for", `question:${questionNumber} - ${answerChoice}`)
-                .text(`${answerChoice}`);
-            
-            // Append this answer choice's content
-            $oneAnswerChoice.append($oneAnswerChoiceRadio);
-            $oneAnswerChoice.append($oneAnswerChoiceLabel);
-
-            // Append this answer choice to the $answerChoices div
-            $answerChoices.append($oneAnswerChoice);
-
-            //console.log("answer choice:");
-            //console.log($("div.question-answer-choices div")); // used to see if construnt of answer choice's HTML is right
-
-        });
-
-        // Append the answer choices to $question
-        $question.append($answerChoices);
-        $oneQuestion.append($question);
-
-        //console.log("answer choices in a set:");
-        //console.log($("div.question-answer-choices")); // used to see if construnct of the answer choices set's HTMLis right
+        // Add text to this radio button
+        let $oneAnswerChoiceLabel = $("<label>")
+            .attr("for", `${answerChoice}`)
+            .text(`${answerChoice}`);
         
-        // Append question's content to $questionsSection
-        $questionsSection.append($oneQuestion);
-    });
+        // Append this answer choice's content
+        $oneAnswerChoice.append($oneAnswerChoiceRadio);
+        $oneAnswerChoice.append($oneAnswerChoiceLabel);
+
+        // Append this answer choice to the $answerChoices div
+        $answerChoices.append($oneAnswerChoice);
+
+        //console.log("answer choice:");
+        //console.log($("div.question-answer-choices div")); // used to see if construnt of answer choice's HTML is right
+
+     });
+
+    // Append the answer choices to $question
+    $question.append($answerChoices);
+    $oneQuestion.append($question);
+
+    //console.log("answer choices in a set:");
+    //console.log($("div.question-answer-choices")); // used to see if construnct of the answer choices set's HTMLis right
+    
+    // Append question's content to $questionsSection
+    $questionSection.append($oneQuestion);
 
     //console.log("answer choices:");
     //console.log($("div.question-answer-choices"));
@@ -202,8 +200,8 @@ $(display).on('click', '#start', function () {
     // Set the HTML for the new content
     display.html(`
         <h1 id="heading">Trivia Game</h1>
-        <p id="timer">2:00</p>
-        <div id="questions-section"></div>
+        <p id="timer">30</p>
+        <div id="question-section"></div>
         <button id="submit">Done</button>
     `);
 
@@ -212,9 +210,10 @@ $(display).on('click', '#start', function () {
         url: "index.html"
     }).then(function() {
         // Add a 120s timer
-        startTimer(10);
+        startTimer(30);
         // Write questions to page
-        writeQuestions(storage);
+        question++;
+        writeQuestions(storage[question]);
     });
 });
 

@@ -20,6 +20,13 @@ var storage = [
             "Mars", "Venus", "Earth", "Mercury"
         ],
         answer: "Earth"
+    },
+    {
+        question: "What is the 5th planet from the Sun?",
+        answerChoices: [
+            "Jupiter", "Venus", "Mars", "Mercury"
+        ],
+        answer: "Jupiter"
     }
 ];
 
@@ -91,7 +98,6 @@ function writeQuestions(storage) {
 
     //console.log("questions section");
     //console.log($("body#questions-page #questions-section"));
-
 }
 
 //console.log($('.question-answer-choices'));
@@ -101,10 +107,10 @@ function results() {
     writeResults();
     
     function getSubmittedAnswers() {
-        console.log("got answer choices");
+        //console.log("got answer choices");
         let answersSubmitted = [];
         let answerChoicesSets = Object.values($('.question-answer-choices'));
-        console.log(answerChoicesSets);
+        //console.log(answerChoicesSets);
         for (let i = 0; i < answerChoicesSets.length; i++) {
             var answerChoicesSet = answerChoicesSets[i];
             
@@ -159,7 +165,7 @@ function results() {
         var userWrong = iterator.next().value;
         var userUnanswered = iterator.next().value;
     
-        display.html(`
+        $content.html(`
             <p>Correct:     ${userCorrect}</p>
             <p>Wrong:       ${userWrong}</p>
             <p>Unasnwered:  ${userUnanswered}</p>
@@ -185,8 +191,7 @@ function startTimer(currentTime) { // currentTime is in s
         if (currentTime-- == 0) {
             // Show results
             results();
-            display.prepend(`
-                <h1 id="heading">Trivia Game</h1>
+            $content.prepend(`
                 <h2 id="status">Times Up</h1>
             `);
         }
@@ -195,14 +200,13 @@ function startTimer(currentTime) { // currentTime is in s
     
 }
 
-var display = $('body #display');
+var $content = $('body #display #content');
 
 // When Trivia started
-$(display).on('click', '#start', function () {
+$('#start').on('click', function () {
     // Set the HTML for the new content
-    display.html(`
-        <h1 id="heading">Trivia Game</h1>
-        <p id="timer">2:00</p>
+    $content.html(`
+        <p>Time Remaining: <span id="timer">2:00</span></p>
         <div id="questions-section"></div>
         <button id="submit">Done</button>
     `);
@@ -212,7 +216,7 @@ $(display).on('click', '#start', function () {
         url: "index.html"
     }).then(function() {
         // Add a 120s timer
-        startTimer(10);
+        startTimer(2*60);
         // Write questions to page
         writeQuestions(storage);
     });
@@ -227,8 +231,7 @@ $(display).on('click', '#submit', function() {
     }).then(function() {
         clearInterval(intervalID); // stop the timer
         results();
-        display.prepend(`
-            <h1 id="heading">Trivia Game</h1>
+        $content.prepend(`
             <h2 id="status">All Done!</h1>
         `);
     });

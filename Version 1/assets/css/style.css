@@ -1,4 +1,42 @@
 body {
-    background: black;
-    color: rgba(250, 247, 254, 0.745);
+    background: #D6CDF1;
+    color: #D6CDF1;
+    margin: 0;
+}
+
+#display {
+    background-color: #452C9E;
+    width: 500px;
+    height: 550px;
+    text-align: center;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.question {
+    border: 1px solid #D6CDF1;
+    padding: 10px;
+}
+
+.question-answer-choices > * {
+    display: inline-block;
+    width: 40%;
+    text-align: left;
+    margin: 5px;
+    /*border: 1px solid #D6CDF1*/
+}
+
+.questions-section {
+}
+
+#container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
