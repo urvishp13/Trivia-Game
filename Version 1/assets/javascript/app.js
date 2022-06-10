@@ -24,9 +24,16 @@ var storage = [
     {
         question: "What is the 5th planet from the Sun?",
         answerChoices: [
-            "Jupiter", "Venus", "Mars", "Mercury"
+            "Jupiter", "Mercury", "Mars", "Uranus"
         ],
         answer: "Jupiter"
+    },
+    {
+        question: "What is the 7th planet from the Sun?",
+        answerChoices: [
+            "Jupiter", "Uranus", "Saturn", "Mars"
+        ],
+        answer: "Saturn"
     }
 ];
 
@@ -43,7 +50,8 @@ function writeQuestions(storage) {
     storage.forEach(questionSet => {
         questionNumber++;
 
-        let $oneQuestion = $("<div>");
+        let $oneQuestion = $("<div>")
+            .attr("class","one-question");
 
         // Question
         let $question = $("<p>")
@@ -82,14 +90,14 @@ function writeQuestions(storage) {
 
         });
 
-        // Append the answer choices to $question
-        $question.append($answerChoices);
+        // Append the question related content to $oneQuestion
         $oneQuestion.append($question);
+        $oneQuestion.append($answerChoices);
 
         //console.log("answer choices in a set:");
         //console.log($("div.question-answer-choices")); // used to see if construnct of the answer choices set's HTMLis right
         
-        // Append question's content to $questionsSection
+        // Append $oneQuestion to $questionsSection
         $questionsSection.append($oneQuestion);
     });
 
@@ -202,14 +210,36 @@ function startTimer(currentTime) { // currentTime is in s
 
 var $content = $('body #display #content');
 
-// When Trivia started
-$('#start').on('click', function () {
+$(document).ready(function () {
+    $content
+        .html('<button id="start">Start</button>')
+        .css({ // give the #content height
+            "min-height":`${$('#display').height() - $content.position().top}px`
+        });
+    $('#start').css({ // position the start button in the middle of the #display
+        "border":"2px solid black",
+        "position":"absolute",
+        "top":"50%",
+        "left":"50%",
+        "transform":"translate(-50%,-50%)"
+    });
+})
+
+// When Trivia started - need to use event delegation since #submit is added dynamically
+$($content).on('click', '#start', function () {
     // Set the HTML for the new content
-    $content.html(`
-        <p>Time Remaining: <span id="timer">2:00</span></p>
-        <div id="questions-section"></div>
-        <button id="submit">Done</button>
-    `);
+    $('#display').css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
+                        // fix its positioning
+        "top":`${$('#display').position().top}`,
+        "left":`${$('#display').position().left}`,
+        "translate":""
+    });
+    $content
+        .html(`
+            <p>Time Remaining: <span id="timer">2:00</span></p>
+            <div id="questions-section"></div>
+            <button id="submit">Done</button>
+        `);
 
     // Write the questions to the page
     $.ajax({
@@ -223,7 +253,7 @@ $('#start').on('click', function () {
 });
 
 // Need to use event delegation since #submit is added dynamically
-$(display).on('click', '#submit', function() {
+$($content).on('click', '#submit', function() {
     //console.log("event working");
     // Display results
     $.ajax({
