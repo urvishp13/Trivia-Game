@@ -6,13 +6,16 @@ body {
 
 #container {
     height: 100vh;
+    position: relative;
 }
 
 #display {
-    position: relative;
-    top: 50%;
+    position: absolute;
+    /* top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
+    top: 75px; /* hardcoded value found from percentage move using js */
+    left: 516.4000244140625px; /* hardcoded value found from percentage move using js */
 
     border: 2px solid black;
     background-color: #452C9E;

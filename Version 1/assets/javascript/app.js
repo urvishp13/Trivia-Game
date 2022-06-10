@@ -217,29 +217,31 @@ $(document).ready(function () {
             "min-height":`${$('#display').height() - $content.position().top}px`
         });
     $('#start').css({ // position the start button in the middle of the #display
-        "border":"2px solid black",
         "position":"absolute",
         "top":"50%",
         "left":"50%",
         "transform":"translate(-50%,-50%)"
     });
-})
+});
+
+//console.log("on load: " + $('#display').position().top);
 
 // When Trivia started - need to use event delegation since #submit is added dynamically
 $($content).on('click', '#start', function () {
     // Set the HTML for the new content
-    $('#display').css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
-                        // fix its positioning
-        "top":`${$('#display').position().top}`,
-        "left":`${$('#display').position().left}`,
-        "translate":""
-    });
-    $content
-        .html(`
-            <p>Time Remaining: <span id="timer">2:00</span></p>
-            <div id="questions-section"></div>
-            <button id="submit">Done</button>
-        `);
+    //console.log("after clicking start: " + $('#display').position().left);
+    // $('#display').css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
+    //                     // fix its positioning
+    //     "top":`${$('#display').position().top}px`,
+    //     "left":`${$('#display').position().left}px`,
+    //     "transform":""
+    // });
+    //console.log("after applying css to display: " + $('#display').position().top);
+    $content.html(`
+        <p>Time Remaining: <span id="timer">2:00</span></p>
+        <div id="questions-section"></div>
+        <button id="submit">Done</button>
+    `);
 
     // Write the questions to the page
     $.ajax({
