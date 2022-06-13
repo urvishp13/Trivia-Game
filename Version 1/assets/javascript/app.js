@@ -62,9 +62,12 @@ function writeQuestions(storage) {
         let $answerChoices = $("<div>")
             .attr("class", "question-answer-choices");
 
+        var answerChoiceNumber = 0;
         questionSet.answerChoices.forEach(answerChoice => {
             // Section for one answer choice
-            let $oneAnswerChoice = $("<div>");
+            let $oneAnswerChoice = $("<div>")
+                // .addClass(`row-${answerChoiceNumber / 2}`) 
+                // .addClass(`col-${answerChoiceNumber % 2}`);
 
             // Create radio nutton for answer choice
             let $oneAnswerChoiceRadio = $("<input>")
@@ -99,6 +102,7 @@ function writeQuestions(storage) {
         
         // Append $oneQuestion to $questionsSection
         $questionsSection.append($oneQuestion);
+        answerChoiceNumber++;
     });
 
     //console.log("answer choices:");
@@ -211,13 +215,20 @@ function startTimer(currentTime) { // currentTime is in s
 var $content = $('body #display #content');
 
 $(document).ready(function () {
+    $('#display').css({ // set the initial positioning of the display
+        "position": "absolute",
+        "top": "50%",
+        "left": "50%",
+        "transform": "translate(-50%, -50%)"
+    });
     $content
-        .html('<button id="start">Start</button>')
-        .css({ // give the #content height
+        .html('<button id="start">Start</button>') // #content's content is dynamically changing so to be consistent, thought it
+                                                   // better to do it this way
+        .css({ // give the #content height so Start button can be centered
             "min-height":`${$('#display').height() - $content.position().top}px`
         });
     $('#start').css({ // position the start button in the middle of the #display
-        "position":"absolute",
+        "position":"absolute", /* relative to #display */
         "top":"50%",
         "left":"50%",
         "transform":"translate(-50%,-50%)"
@@ -226,16 +237,18 @@ $(document).ready(function () {
 
 //console.log("on load: " + $('#display').position().top);
 
+var $display = $('body #display');
+
 // When Trivia started - need to use event delegation since #submit is added dynamically
 $($content).on('click', '#start', function () {
     // Set the HTML for the new content
     //console.log("after clicking start: " + $('#display').position().left);
-    // $('#display').css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
-    //                     // fix its positioning
-    //     "top":`${$('#display').position().top}px`,
-    //     "left":`${$('#display').position().left}px`,
-    //     "transform":""
-    // });
+    $('#display').css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
+                        // fix its positioning
+        "top": $('#display').position().top + 'px',
+        "left": $('#display').position().left + 'px',
+        "transform":""
+    });
     //console.log("after applying css to display: " + $('#display').position().top);
     $content.html(`
         <p>Time Remaining: <span id="timer">2:00</span></p>
