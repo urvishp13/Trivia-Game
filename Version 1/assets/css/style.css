@@ -6,11 +6,12 @@ body {
 
 #container {
     height: 100vh;
-    position: relative;
+    padding: 20px; /* to get rid of the collapsing margin */
 }
 
 #display {
-    border: 2px solid black;
+    /*border: 1px solid black;*/
+    padding: 10px 0; /* to get rid of the collapsing margin */
     background-color: #452C9E;
     width: 500px;
     min-height: 550px;
@@ -18,19 +19,19 @@ body {
 }
 
 #content {
-    border: 1px solid black;
+    /*border: 1px solid black;*/
 }
 
 .question {
     /*border: 1px solid #D6CDF1;*/
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 5px auto;
+    width: 330px;
 }
 
 .question-answer-choices {
     /*border: 1px solid #D6CDF1;*/
     margin: 5px auto;
-    width: 45%;
+    width: 267px;
 }
 
 .question-answer-choices > * {
@@ -45,6 +46,8 @@ body {
     vertical-align: top;
 }
 
-/* .one-question {
+.one-question {
     border: 1px solid #D6CDF1;
-} */
+    margin: 15px auto;
+    width: 375px;
+}

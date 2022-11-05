@@ -62,12 +62,9 @@ function writeQuestions(storage) {
         let $answerChoices = $("<div>")
             .attr("class", "question-answer-choices");
 
-        var answerChoiceNumber = 0;
         questionSet.answerChoices.forEach(answerChoice => {
             // Section for one answer choice
             let $oneAnswerChoice = $("<div>")
-                // .addClass(`row-${answerChoiceNumber / 2}`) 
-                // .addClass(`col-${answerChoiceNumber % 2}`);
 
             // Create radio nutton for answer choice
             let $oneAnswerChoiceRadio = $("<input>")
@@ -102,7 +99,6 @@ function writeQuestions(storage) {
         
         // Append $oneQuestion to $questionsSection
         $questionsSection.append($oneQuestion);
-        answerChoiceNumber++;
     });
 
     //console.log("answer choices:");
@@ -213,19 +209,21 @@ function startTimer(currentTime) { // currentTime is in s
 }
 
 var $content = $('body #display #content');
+var $display = $('body #display');
 
 $(document).ready(function () {
-    $('#display').css({ // set the initial positioning of the display
-        "position": "absolute",
-        "top": "50%",
-        "left": "50%",
-        "transform": "translate(-50%, -50%)"
+    $display.css({ // set the initial positioning of the display
+        /* doing this simply to perfectly center the start button */
+        "position":"absolute",
+        "top":"50%",
+        "left":"50%",
+        "transform":"translate(-50%,-50%)"
     });
     $content
         .html('<button id="start">Start</button>') // #content's content is dynamically changing so to be consistent, thought it
                                                    // better to do it this way
         .css({ // give the #content height so Start button can be centered
-            "min-height":`${$('#display').height() - $content.position().top}px`
+            "min-height":`${$display.height() - $content.position().top}px`
         });
     $('#start').css({ // position the start button in the middle of the #display
         "position":"absolute", /* relative to #display */
@@ -237,17 +235,23 @@ $(document).ready(function () {
 
 //console.log("on load: " + $('#display').position().top);
 
-var $display = $('body #display');
+
 
 // When Trivia started - need to use event delegation since #submit is added dynamically
 $($content).on('click', '#start', function () {
     // Set the HTML for the new content
     //console.log("after clicking start: " + $('#display').position().left);
-    $('#display').css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
-                        // fix its positioning
-        "top": $('#display').position().top + 'px',
-        "left": $('#display').position().left + 'px',
-        "transform":""
+    $display.css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
+                   //   fix its positioning
+        /* undo translation due to absolute positioning */
+        "position":"", 
+        "top":"",
+        "left":"",
+        "transform":"",
+
+        "margin":"0 auto",
+        "padding": "10px 0", /* to get rid of the collapsing margin */
+        
     });
     //console.log("after applying css to display: " + $('#display').position().top);
     $content.html(`
@@ -260,6 +264,8 @@ $($content).on('click', '#start', function () {
     $.ajax({
         url: "index.html"
     }).then(function() {
+        // make display aestheically pleasing
+        var top = $display.position().top;
         // Add a 120s timer
         startTimer(2*60);
         // Write questions to page
