@@ -229,7 +229,15 @@ $(document).ready(function () {
         "position":"absolute", /* relative to #display */
         "top":"50%",
         "left":"50%",
-        "transform":"translate(-50%,-50%)"
+        "transform":"translate(-50%,-50%)",
+
+        "width":"50%",
+        "border":"none",
+        "font-size":"1em",
+        "padding":"5px",
+        "background":"#D6CDF1",
+        "color":"#161032",
+        "margin-bottom":"5px"
     });
 });
 
@@ -238,7 +246,7 @@ $(document).ready(function () {
 
 
 // When Trivia started - need to use event delegation since #submit is added dynamically
-$($content).on('click', '#start', function () {
+$content.on('click', '#start', function () {
     // Set the HTML for the new content
     //console.log("after clicking start: " + $('#display').position().left);
     $display.css({ // get the position of the display and replace its percentage dimensions with concrete numbers to 
@@ -250,7 +258,7 @@ $($content).on('click', '#start', function () {
         "transform":"",
 
         "margin":"0 auto",
-        "padding": "10px 0", /* to get rid of the collapsing margin */
+        "display": "flow-root" /* to get rid of the collapsing margin */
         
     });
     //console.log("after applying css to display: " + $('#display').position().top);
@@ -264,17 +272,24 @@ $($content).on('click', '#start', function () {
     $.ajax({
         url: "index.html"
     }).then(function() {
-        // make display aestheically pleasing
-        var top = $display.position().top;
         // Add a 120s timer
         startTimer(2*60);
         // Write questions to page
         writeQuestions(storage);
+        $('#submit').css({
+            "width":"50%",
+            "border":"none",
+            "font-size":"1em",
+            "padding":"5px",
+            "background":"#D6CDF1",
+            "color":"#161032",
+            "margin-bottom":"5px"
+        });
     });
 });
 
 // Need to use event delegation since #submit is added dynamically
-$($content).on('click', '#submit', function() {
+$content.on('click', '#submit', function() {
     //console.log("event working");
     // Display results
     $.ajax({
